@@ -26,6 +26,7 @@ public class SwerveCommand extends Command{
         }
         SmartDashboard.putNumber("Motor Position: ",swerve.getControlOnePosition());
         SmartDashboard.putNumber("ControlOneRotations: ",swerve.getControlOneRotations());
-        swerve.moveControlOne((xbox.getLeftX()+1)*180);
+        SmartDashboard.putNumber("Degrees-Input: ", (xbox.getLeftX() + 1)* 180);
+        swerve.moveControlOne((xbox.getLeftX() + 1)*180);
     }
 }
