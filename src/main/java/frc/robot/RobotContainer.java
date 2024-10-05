@@ -31,32 +31,20 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
   // create inputs
-  //public final Joystick joystick1 = new Joystick(2);
   public final XboxController xbox = new XboxController(0);
-  // private final MecanumSystem m_mecanum = new MecanumSystem();
-  // public final FlyWheelAndHook m_fly = new FlyWheelAndHook();
-  // public final LimeLightValues m_value = new LimeLightValues();
   public final SwerveSystem m_swerve = new SwerveSystem();
   //create Commands
-  // public final DriveWithTank m_TankCommand = new DriveWithTank(xbox,m_mecanum);
-  // public final LimeLight m_limelight = new LimeLight(m_value,xbox, m_mecanum);
-  // public final FlyCommand m_flycommand = new FlyCommand(xbox, m_fly,m_mecanum);
-      public final SwerveCommand m_swerveCommand = new SwerveCommand(m_swerve,xbox);
+  public final SwerveCommand m_swerveCommand = new SwerveCommand(m_swerve,xbox);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   //Default Constructor
   public RobotContainer(){
     m_swerve.setDefaultCommand(m_swerveCommand);
-    // m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_mecanum,m_fly,m_value));    
-    // m_mecanum.setDefaultCommand(m_TankCommand);
-    // m_fly.setDefaultCommand(m_flycommand);
-    // m_value.setDefaultCommand(m_limelight);
-
-    
-}
+    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());    
+  }
 
   private void configureButtonBindings(){ 
-      //does nothing 
+    //does nothing 
   }
   
   //for some reason it is important............. idk why
