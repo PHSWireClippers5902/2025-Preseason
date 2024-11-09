@@ -17,17 +17,17 @@ public final class Constants{
 
     }
     public static final class SwerveMotorConstants{
-        public static final int powerOneID = 7;
-        public static final int controlOneID = 6;
+        public static final int powerFLID = 1;
+        public static final int controlFLID = 1;
 
-        public static final int powerTwoID = 0;
-        public static final int controlTwoID = 0;
+        public static final int powerFRID = 2;
+        public static final int controlFRID = 2;
 
-        public static final int powerThreeID = 0;
-        public static final int controlThreeID = 0;
+        public static final int powerBLID = 3;
+        public static final int controlBLID = 3;
 
-        public static final int powerFourID = 0;
-        public static final int controlFourID = 0;
+        public static final int powerBRID = 4;
+        public static final int controlBRID = 4;
 
     }
 }

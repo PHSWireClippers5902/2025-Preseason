@@ -9,50 +9,47 @@ import frc.robot.subsystems.SwerveSystem;
 public class SwerveCommand extends Command{
     public SwerveSystem swerve;
     public XboxController xbox;
+    // public boolean apress=false,bpress=false,ypress=false,xpress=false;
     public double iLx, iLy,highonpot;
     public double theta;
+    public double allSpeed = 0;
     public Angle anghoul;
+    public boolean aPressed = true;
     public SwerveCommand(SwerveSystem m_swerve,XboxController m_xbox){
         xbox = m_xbox;
         swerve = m_swerve;
-        anghoul = new Angle(0,0);
+        // anghoul = new Angle(0,0);
+        System.out.println("INITIAL POSITIONS " + swerve.getControllerPositions());
+        
+        swerve.zeroMotors();
+        System.out.println("INITIAL POSITIONS AFTER ZEROING " + swerve.getControllerPositions());
+        
         addRequirements(swerve);
     }
 
     //execute order 66 busters
     @Override
     public void execute() {
-        if (Math.abs(xbox.getLeftX()) > 0.2 ){
-            iLx = xbox.getLeftX();
-        }
-        else {
-            iLx = 0;
-        }
-        if (Math.abs(xbox.getLeftY()) > 0.2 ){
-            iLy = -xbox.getLeftY();
-        }
-        else {
-            iLy = 0;
-        }
+        allSpeed = (Math.abs(xbox.getRightY())> 0.1) ? xbox.getRightY() : 0;
+        swerve.moveAllPower(allSpeed*0.5,allSpeed*0.5,allSpeed*0.5,allSpeed*0.5);
+        SmartDashboard.putString("Positions: ", swerve.getControllerPositions());
+        if (xbox.getPOV() != -1){
 
-        anghoul.setBoth(iLx,iLy);
-        if (xbox.getLeftTriggerAxis() > 0.2){
-            swerve.movePowerOne(0.3*xbox.getLeftTriggerAxis());
-        }
-        else if (xbox.getRightTriggerAxis() > 0.2){
-            swerve.movePowerOne(-0.3*xbox.getRightTriggerAxis());
+        
+            swerve.moveAllControl(xbox.getPOV(),xbox.getPOV(),xbox.getPOV(),xbox.getPOV());
         }
         else {
-            swerve.movePowerOne(0);
+            swerve.moveAllControl(0,0,0,0);
         }
-        SmartDashboard.putNumber("Motor Position: ",swerve.getControlOnePosition());
-        SmartDashboard.putNumber("ControlOneRotations: ",swerve.getControlOneRotations());
-        SmartDashboard.putNumber(" X: ", (iLx));
-        SmartDashboard.putNumber(" Y: ", (iLy));
-        SmartDashboard.putNumber("Theta",anghoul.calcAngle());
-        theta = anghoul.calcAngle();
-        swerve.moveControlOne(theta);
-        SmartDashboard.putNumber("Percent Error: ",(theta*4096/360) / swerve.getControlOnePosition());
-        // swerve.moveControlOne(360);
+        if (xbox.getAButton()){
+            if (aPressed){
+                swerve.zeroMotors();
+            }
+            aPressed = false;
+        }
+        else {
+            aPressed = true;
+        }
+        
     }
 }
