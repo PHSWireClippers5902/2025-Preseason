@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.swing.text.Position;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -48,10 +50,12 @@ public class SwerveSystem extends SubsystemBase {
     public SparkPIDController powerBackRightController;// = hook.getPIDController();
     public RelativeEncoder powerBackRightRelativeEncoder;// = hook.getEncoder();
 
-
+    public double controlFrontLeftAngle;
+    public double controlFrontRightAngle;
+    public double controlBackLeftAngle;
+    public double controlBackRightAngle;
 
     public SwerveSystem(){
-
         createMotorObjects();
         normalConfigurations();
     }
@@ -72,43 +76,108 @@ public class SwerveSystem extends SubsystemBase {
         controlBackRight = new WPI_TalonSRX(SwerveMotorConstants.controlBRID);
         powerBackRight = new CANSparkMax(SwerveMotorConstants.powerBRID,MotorType.kBrushless);
 
+        controlFrontLeftAngle = 0;
+        controlFrontRightAngle = 0;
+        controlBackLeftAngle = 0;
+        controlBackRightAngle = 0;
+
     }
+
+
+
+    public void moveControlFrontLeft(double alpha){
+        // double theta = getControlFrontLeftPosition()*360/4096;
+        // if (Math.abs(theta-alpha)>180){
+        //     if (theta-alpha > 180){
+        //        theta-=360;  
+        //     }
+        //     else {
+        //        theta+=360;
+        //     }
+        // }
+        // setFrontLeftPositionCode(theta);
+        controlFrontLeft.set(ControlMode.Position,alpha*4096/360);
+    }
+    public void moveControlFrontRight(double alpha){
+        // double theta = getControlFrontRightPosition()*360/4096;
+        // if (Math.abs(theta-alpha)>180){
+        //     if (theta-alpha > 180){
+        //        theta-=360;  
+        //     }
+        //     else {
+        //        theta+=360;
+        //     }
+        // }
+        // setFrontRightPositionCode(theta);
+        controlFrontRight.set(ControlMode.Position,alpha*4096/360);
+    }
+    public void moveControlBackLeft(double alpha){
+        // double theta = getControlBackLeftPosition()*360/4096;
+        // if (Math.abs(theta-alpha)>180){
+        //     if (theta-alpha > 180){
+        //        theta-=360;  
+        //     }
+        //     else {
+        //        theta+=360;
+        //     }
+        // }
+        // setBackLeftPositionCode(theta);
+        controlBackLeft.set(ControlMode.Position,alpha*4096/360);
+    }
+    public void moveControlBackRight(double alpha){
+        // double theta = getControlBackRightPosition()*360/4096;
+        // if (Math.abs(theta-alpha)>180){
+        //     if (theta-alpha > 180){
+        //        theta-=360;  
+        //     }
+        //     else {
+        //        theta+=360;
+        //     }
+        // }
+        // setBackRightPositionCode(theta);
+        controlBackRight.set(ControlMode.Position,alpha*4096/360);
+    }
+
+
+
+
+
 
 
 
     //theory
     //frontleft
-    public void moveControlFrontLeft(double theta){
-        double targetPosition = 4096 * theta / 360;
-        controlFrontLeft.set(ControlMode.Position,targetPosition);
+    public void setFrontLeftPositionCode(double theta){
+        controlFrontLeft.setSelectedSensorPosition(theta*4096/360,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
     }
+    public void setFrontRightPositionCode(double theta){
+        controlFrontRight.setSelectedSensorPosition(theta*4096/360,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
 
+    }
+    public void setBackLeftPositionCode(double theta){
+        controlBackLeft.setSelectedSensorPosition(theta*4096/360,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
+
+    }
+    public void setBackRightPositionCode(double theta){
+        controlBackRight.setSelectedSensorPosition(theta*4096/360,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
+    }
     public void movePowerFrontLeft(double speed){
         powerFrontLeft.set(speed);
     }
     //front right
-    public void moveControlFrontRight(double theta){
-        double targetPosition = 4096 * theta / 360;
-        controlFrontRight.set(ControlMode.Position,targetPosition);
-    }
+    
 
     public void movePowerFrontRight(double speed){
         powerFrontRight.set(speed);
     }
     //back left
-    public void moveControlBackLeft(double theta){
-        double targetPosition = 4096 * theta / 360;
-        controlBackLeft.set(ControlMode.Position,targetPosition);
-    }
+    
 
     public void movePowerBackLeft(double speed){
         powerBackLeft.set(speed);
     }
     //back right
-    public void moveControlBackRight(double theta){
-        double targetPosition = 4096 * theta / 360;
-        controlBackRight.set(ControlMode.Position,targetPosition);
-    }
+    
 
     public void movePowerBackRight(double speed){
         powerBackRight.set(speed);
@@ -122,15 +191,93 @@ public class SwerveSystem extends SubsystemBase {
         movePowerBackRight(speedBackRight);
     }
     //all control
-    public void moveAllControl(double thetaFrontLeft, double thetaFrontRight, double thetaBackLeft, double thetaBackRight){
-        moveControlFrontLeft(thetaFrontLeft);
-        moveControlFrontRight(thetaFrontRight);
-        moveControlBackLeft(thetaBackLeft);
-        moveControlBackRight(thetaBackRight);
+    public void moveAllControl(){
+        // moveControlFrontLeft(controlFrontLeftAngle);
+        // moveControlFrontRight(controlFrontRightAngle);
+        // moveControlBackLeft(controlBackLeftAngle);
+        // moveControlBackRight(controlBackRightAngle);
     }
 
+    
 
+    
+    //front left
+    public void changeDirectionsFrontLeft(){
+        reverseFrontLeft = !reverseFrontLeft;
+        powerFrontLeft.setInverted(reverseFrontLeft);
+    }
+    
+    public double getControlFrontLeftPosition(){
+        return controlFrontLeft.getSelectedSensorPosition();
+    }
+    public double getControlFrontLeftRotations(){
+        return controlFrontLeft.getSelectedSensorPosition() / 4096;
+    }
+    //front right
+    public void changeDirectionsFrontRight(){
+        reverseFrontRight = !reverseFrontRight;
+        powerFrontRight.setInverted(reverseFrontRight);
+    }
+    
+    public double getControlFrontRightPosition(){
+        return controlFrontRight.getSelectedSensorPosition();
+    }
+    public double getControlFrontRightRotations(){
+        return controlFrontRight.getSelectedSensorPosition() / 4096;
+    }
+    //back left
+    public void changeDirectionsBackLeft(){
+        reverseBackLeft = !reverseBackLeft;
+        powerBackLeft.setInverted(reverseBackLeft);
+    }
+    
+    public double getControlBackLeftPosition(){
+        return controlBackLeft.getSelectedSensorPosition();
+    }
+    public double getControlBackLeftRotations(){
+        return controlBackLeft.getSelectedSensorPosition() / 4096;
+    }
+    //back right
+    public void changeDirectionsBackRight(){
+        reverseBackRight = !reverseBackRight;
+        powerBackRight.setInverted(reverseBackRight);
+    }
+    
+    public double getControlBackRightPosition(){
+        return controlBackRight.getSelectedSensorPosition();
+    }
+    public double getControlBackRightRotations(){
+        return controlBackRight.getSelectedSensorPosition() / 4096;
+    }
 
+    public void zeroMotors(){
+        // normalConfigurations();
+        controlFrontLeft.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
+        controlFrontRight.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
+        controlBackLeft.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
+        controlBackRight.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
+
+    }
+    
+    
+    public void changeAllAngles(double thetaFL, double thetaFR, double thetaBL, double thetaBR){
+        controlFrontLeftAngle = thetaFL;
+        controlFrontRightAngle = thetaFR;
+        controlBackLeftAngle = thetaBL;
+        controlBackRightAngle = thetaBR;
+    }
+    public void changeFrontLeftAngle(double theta){
+        controlFrontLeftAngle = theta;
+    }
+    public void changeFrontRightAngle(double theta){
+        controlFrontRightAngle = theta;
+    }
+    public void changeBackLeftAngle(double theta){
+        controlBackLeftAngle = theta;
+    }
+    public void changeBackRightAngle(double theta){
+        controlBackRightAngle = theta;
+    }
     public void normalConfigurations(){
         //resets to default to avoid unexpected error
         controlFrontLeft.configFactoryDefault();
@@ -263,65 +410,52 @@ public class SwerveSystem extends SubsystemBase {
         reverseBackRight = false;
         powerBackRight.setInverted(reverseBackRight);
     }
-    //front left
-    public void changeDirectionsFrontLeft(){
-        reverseFrontLeft = !reverseFrontLeft;
-        powerFrontLeft.setInverted(reverseFrontLeft);
+    public double angleGetter(double x, double y){
+        //gets angle based on very complicated math (really just applied trig)
+        if (y >= 0){
+            if (x == 1){
+                return Math.asin(y)*180/Math.PI;
+            }
+            else if (x == -1){
+                return 180 - Math.asin(y)*180/Math.PI;
+            }
+            else if (y == 1){
+                if (x >= 0){
+                    return Math.acos(x)*180/Math.PI;
+                }
+                else {
+                    return 180-Math.acos(x)*180/Math.PI;
+                }
+            }
+            else {
+                if (x >= 0){
+                    return Math.atan(y/x)*180/Math.PI;
+                }
+                else {
+                    return 180-Math.atan(-y/x)*Math.PI;
+                }
+            }
+        }
+        else {
+            if (x == 1){
+                return 360 - Math.asin(-y)*180/Math.PI;
+            }
+            else if (y == -1){
+                if (x >= 0){
+                    return 360-Math.acos(x)*180/Math.PI;
+                }
+                else {
+                    return 180-Math.acos(x)*180/Math.PI;
+                }
+            }
+            else {
+                if (x >= 0){
+                    return 360-Math.atan(y/x)*180/Math.PI;
+                }
+                else {
+                    return 180+Math.atan(y/x)*180/Math.PI;
+                }
+            }
+        }
     }
-    
-    public double getControlFrontLeftPosition(){
-        return controlFrontLeft.getSelectedSensorPosition();
-    }
-    public double getControlFrontLeftRotations(){
-        return controlFrontLeft.getSelectedSensorPosition() / 4096;
-    }
-    //front right
-    public void changeDirectionsFrontRight(){
-        reverseFrontRight = !reverseFrontRight;
-        powerFrontRight.setInverted(reverseFrontRight);
-    }
-    
-    public double getControlFrontRightPosition(){
-        return controlFrontRight.getSelectedSensorPosition();
-    }
-    public double getControlFrontRightRotations(){
-        return controlFrontRight.getSelectedSensorPosition() / 4096;
-    }
-    //back left
-    public void changeDirectionsBackLeft(){
-        reverseBackLeft = !reverseBackLeft;
-        powerBackLeft.setInverted(reverseBackLeft);
-    }
-    
-    public double getControlBackLeftPosition(){
-        return controlBackLeft.getSelectedSensorPosition();
-    }
-    public double getControlBackLeftRotations(){
-        return controlBackLeft.getSelectedSensorPosition() / 4096;
-    }
-    //back right
-    public void changeDirectionsBackRight(){
-        reverseBackRight = !reverseBackRight;
-        powerBackRight.setInverted(reverseBackRight);
-    }
-    
-    public double getControlBackRightPosition(){
-        return controlBackRight.getSelectedSensorPosition();
-    }
-    public double getControlBackRightRotations(){
-        return controlBackRight.getSelectedSensorPosition() / 4096;
-    }
-
-    public String getControllerPositions(){
-        return "FL: " + getControlFrontLeftPosition() + " FR: " + getControlFrontRightPosition() + " BL: " + getControlBackLeftPosition() + " BR: " + getControlBackRightPosition();
-    }
-    public void zeroMotors(){
-        // normalConfigurations();
-        controlFrontLeft.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
-        controlFrontRight.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
-        controlBackLeft.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
-        controlBackRight.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
-
-    }
-
 }
