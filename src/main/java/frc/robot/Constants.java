@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+
 public final class Constants{
     public static final class SwervePIDConstants{
         public static final int kSlotIdx = 0;
@@ -12,7 +14,7 @@ public final class Constants{
 
         public static boolean kMotorInvert = false;
 
-        public static final Gains kGains = new Gains(0.8, 0, 0.5, 0, 0, 1.0);
+        public static final Gains kGains = new Gains(0.4, 0, 0.5, 0, 0, 1.0);
 
 
     }
@@ -30,5 +32,17 @@ public final class Constants{
         public static final int controlBRID = 4;
 
     }
+    public static final class SwerveCANConstants{
+        public static final int kFrontLeftDrivingCanId = 5;
+        public static final int kRearLeftDrivingCanId = 7;
+        public static final int kFrontRightDrivingCanId = 6;
+        public static final int kRearRightDrivingCanId = 8;
+
+        public static final int kFrontLeftTurningCanId = 1;
+        public static final int kRearLeftTurningCanId = 3;
+        public static final int kFrontRightTurningCanId = 2;
+        public static final int kRearRightTurningCanId = 4;
+    }
+    
     
 }
