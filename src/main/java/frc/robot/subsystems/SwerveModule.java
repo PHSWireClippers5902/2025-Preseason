@@ -17,12 +17,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwervePIDConstants;
 
 public class SwerveModule extends SubsystemBase{
-    public static final double kWheelRadius = 0.0508; //convert LATER, in m
+    public static final double kWheelRadius = 0.0379; //convert LATER, in m
     public static final int kEncoderResolution = 4096;
     //change later
-    public static final double kGearReduction = 10.71;
+    public static final double kGearReduction = 0.5;
     public static final double encoderToRadians = (2*Math.PI)/(kEncoderResolution);
-    public static final double kMaxSpeed = 3.0; // 3 meters per second should be fine to work with 
+    public static final double kMaxSpeed = 2.0; // 3 meters per second should be fine to work with 
     public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
 
     CANSparkMax powerController;
@@ -31,11 +31,13 @@ public class SwerveModule extends SubsystemBase{
     SparkPIDController powerPIDController;
 
 
-    public SwerveModule(int powerID, int steeringID){
+    public SwerveModule(int powerID, int steeringID,boolean powerInvert){
         powerController = new CANSparkMax(powerID,MotorType.kBrushless);
+        powerController.setInverted(powerInvert);
         powerEncoder = powerController.getEncoder();
         powerPIDController = powerController.getPIDController();
         powerEncoder.setPosition(0);
+        
         // public static final double kDrivingP = 0.2;
         // public static final double kDrivingI = 0; 
         // public static final double kDrivingD = 0.002; 
@@ -69,7 +71,8 @@ public class SwerveModule extends SubsystemBase{
         steeringController.config_kI(SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kGains.kI,SwervePIDConstants.kTimeoutMs);
         steeringController.config_kD(SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kGains.kD,SwervePIDConstants.kTimeoutMs);
         // steeringController.setDistancePerPulse();
-        steeringController.configSelectedFeedbackCoefficient(2*Math.PI/kEncoderResolution,0,0);
+        steeringController.configSelectedFeedbackCoefficient(1/kEncoderResolution,0,0);
+        
         //sets the relative sensor to match absolute
         steeringController.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
 
@@ -97,8 +100,12 @@ public class SwerveModule extends SubsystemBase{
         
         double targetAngleRadians = optimizedState.angle.getRadians();
         double targetEncoderPosition = targetAngleRadians / encoderToRadians;
-        steeringController.set(ControlMode.Position,targetEncoderPosition);
-
+        // if (Math.abs(angleError) > 0.01) {
+        //     steeringController.set(ControlMode.Position, targetEncoderPosition);
+        // } else {
+        //     steeringController.set(ControlMode.PercentOutput, 0); // Stop if error is small
+        // }
+        steeringController.set(ControlMode.Position, targetEncoderPosition);
     }
     public SwerveModuleState getState(){
         double speedMPS = powerEncoder.getVelocity();

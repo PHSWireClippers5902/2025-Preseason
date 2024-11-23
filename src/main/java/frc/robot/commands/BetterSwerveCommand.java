@@ -7,7 +7,7 @@ import frc.robot.subsystems.Swerve;
 public class BetterSwerveCommand extends Command {
     public Joystick myJoystick;
     public Swerve mySwerve;
-    private static final double kDeadband = 0.1;
+    private static final double kDeadband = 0.2;
     private static final double kMaxSpeed = Swerve.kMaxSpeed;
     private static final double kMaxAngularSpeed = Swerve.kMaxAngularSpeed;
 
@@ -19,8 +19,10 @@ public class BetterSwerveCommand extends Command {
     @Override
     public void execute() {
         double xSpeed = -applyDeadband(myJoystick.getY()) * kMaxSpeed;
+        // double ySpeed = 0,rot = 0;
+        // double rot = 0;
         double ySpeed = -applyDeadband(myJoystick.getX()) * kMaxSpeed;
-        double rot = -applyDeadband(myJoystick.getZ()) * kMaxAngularSpeed;
+        double rot = applyDeadband(myJoystick.getZ()) * kMaxAngularSpeed;
 
         boolean fieldRelative = false;
 
