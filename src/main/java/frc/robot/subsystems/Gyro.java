@@ -13,7 +13,7 @@ public class Gyro extends SubsystemBase{
         m_gyro = new AHRS(I2C.Port.kMXP);
     }
     public Rotation2d getAng(){
-        return m_gyro.getRotation2d();
+        return m_gyro.getRotation2d();     
     }
     public void reset(){
         m_gyro.reset();

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,13 +38,13 @@ public class RobotContainer {
   // public final SwerveCommand m_swerveCommand = new SwerveCommand(m_swerve,xbox);
   public final Swerve m_swerve = new Swerve();
   public final Joystick joystick1 = new Joystick(0);
-
+  // public final SingleMotor singleMotor = new SingleMotor(xbox);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-  public final BetterSwerveCommand swerveCommand = new BetterSwerveCommand(joystick1, m_swerve);
+  // public final BetterSwerveCommand swerveCommand = new BetterSwerveCommand(joystick1, m_swerve);
   //Default Constructor
   public RobotContainer(){
     // m_swerve.setDefaultCommand(m_swerveCommand);
-    m_swerve.setDefaultCommand(swerveCommand);
+    // m_swerve.setDefaultCommand(swerveCommand);
     m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());    
   }
 
@@ -52,9 +53,9 @@ public class RobotContainer {
   }
   
   //for some reason it is important............. idk why
-  // public XboxController getXbox() {
-  //   return xbox;
-  // }
+  public XboxController getXbox() {
+    return xbox;
+  }
   public Joystick getJoystick(){
     return joystick1;
   }

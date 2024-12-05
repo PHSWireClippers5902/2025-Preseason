@@ -14,13 +14,13 @@ import frc.robot.Constants.SwerveCANConstants;
 
 public class Swerve extends SubsystemBase{
     public static final double kMaxSpeed = 3.0; // 3 meters per second should be fine to work with 
-    public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
+    public static final double kMaxAngularSpeed = 0.5*Math.PI; // 1/2 rotation per second
 
     public Gyro myGyro = new Gyro();
 
     public Translation2d m_frontLeftLocation = new Translation2d(-0.573,0.573);
-    public Translation2d m_frontRightLocation = new Translation2d(0.573,0.573);
-    public Translation2d m_backLeftLocation = new Translation2d(-0.573,-0.573);
+    public Translation2d m_frontRightLocation = new Translation2d(-0.573,-0.573);
+    public Translation2d m_backLeftLocation = new Translation2d(0.573,0.573);
     public Translation2d m_backRightLocation = new Translation2d(0.573,-0.573);
 
     public SwerveModule m_frontLeft = new SwerveModule(SwerveCANConstants.kFrontLeftDrivingCanId,SwerveCANConstants.kFrontLeftTurningCanId,false);
