@@ -79,6 +79,10 @@ public class SwerveModule extends SubsystemBase{
 
         
     }
+    public void resetSteerPosition(){
+        steeringController.setSelectedSensorPosition(0,SwervePIDConstants.kPIDLoopIdx,SwervePIDConstants.kTimeoutMs);
+    }
+
     public SwerveModulePosition getPosition(){
         double distanceMeters = powerEncoder.getPosition();
         double angleRadians = steeringController.getSelectedSensorPosition() * encoderToRadians;

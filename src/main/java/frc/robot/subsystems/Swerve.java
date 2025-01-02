@@ -51,6 +51,7 @@ public class Swerve extends SubsystemBase{
 
     public Swerve(){
         myGyro.reset();
+        // myGyro.originalPosition = myGyro.m_gyro.getRoll()+180;
     }
 
     public void drive(double xSpeed,double ySpeed, double rot, boolean fieldRelative, double periodSeconds){
@@ -66,8 +67,20 @@ public class Swerve extends SubsystemBase{
         m_backRight.setDesiredState(swerveModuleStates[3]);
         SmartDashboard.putNumber("FL Distance: ", m_frontLeft.steeringController.getSelectedSensorPosition(0));
         SmartDashboard.putNumber("FL Speed: "  , m_frontLeft.steeringController.getSelectedSensorVelocity(0));
+        // SmartDashboard.putRaw("Translation2d: ", myGyro.m_gyro.getRotation2d());
+        // SmartDashboard.putNumber("Yaw: ",myGyro.m_gyro.getYaw());
+        // SmartDashboard.putNumber("Pitch: ",myGyro.m_gyro.getPitch());
+        // SmartDashboard.putNumber("Roll: ",myGyro.getRollFunction());
+
         // SmartDashboard.putData("Module States: ", );
         
+    }
+    
+    public void resetAll(){
+        m_frontLeft.resetSteerPosition();
+        m_frontRight.resetSteerPosition();
+        m_backLeft.resetSteerPosition();
+        m_backRight.resetSteerPosition();
     }
     
     
